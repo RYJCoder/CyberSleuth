@@ -1,15 +1,22 @@
 # debug_predict.py
+
 import joblib
-import pandas as pd
-from url_feature_extractor import extract_numeric_features
 
-model = joblib.load("phishing_pipeline.pkl")
+MODEL_PATH = "phishing_pipeline.pkl"
+model = joblib.load(MODEL_PATH)
 
-url = "https://google.com"
-numeric = extract_numeric_features(url)
-df = pd.DataFrame([{"url": url, **numeric}])
+test_urls = [
+    "https://google.com",
+    "https://github.com",
+    "https://wikipedia.org",
+    "http://paypal-account-verify.com/login",
+    "http://192.168.1.15/secure-login",
+]
 
-print("Input features:", df.to_dict(orient="records")[0])
-proba = model.predict_proba(df)[0]    # [prob_not_phish, prob_phish]
-pred = model.predict(df)[0]
-print("predict:", pred, "prob_phish:", proba[1])
+for url in test_urls:
+    proba = model.predict_proba([url])[0][1]  # P(phishing)
+    pred = model.predict([url])[0]
+    print(f"URL: {url}")
+    print(f"  predicted_label: {pred} (1=phish,0=benign)")
+    print(f"  phishing_probability: {proba:.3f}")
+    print()

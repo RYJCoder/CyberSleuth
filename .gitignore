@@ -1,18 +1,14 @@
-# Python environment and cache
 venv/
 __pycache__/
 *.pyc
 
-# Large or generated ML files
+# Ignore pickle files by default, except our final model
 *.pkl
+!phishing_pipeline.pkl
+
+# Data and junk
 *.csv
 *.zip
 *.log
-
-# OS junk files
 .DS_Store
 Thumbs.db
-
-# Streamlit session files
-.streamlit/
-

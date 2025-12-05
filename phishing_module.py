@@ -1,17 +1,26 @@
+# phishing_module.py
+
 import joblib
-import pandas as pd
-from url_feature_extractor import extract_numeric_features
 
-# Load pipeline (must exist in same folder)
-model = joblib.load("phishing_pipeline.pkl")
+MODEL_PATH = "phishing_pipeline.pkl"
+model = joblib.load(MODEL_PATH)
 
-def predict_url(url):
+def predict_url(url: str, threshold: float = 0.5) -> str:
     """
-    Accept a single URL string, produce a DataFrame with the same columns
-    used in training, and predict using the saved pipeline.
+    Use the TF-IDF + LogisticRegression pipeline to classify a URL.
+
+    threshold: probability above which we call it phishing.
     """
-    numeric = extract_numeric_features(url)
-    df = pd.DataFrame([{"url": url, **numeric}])  # single-row DataFrame
-    pred = model.predict(df)[0]
-    # optionally get probability: proba = model.predict_proba(df)[0,1]
-    return "🚨 Phishing Site Detected!" if pred == 1 else "✅ Safe URL"
+    url = url.strip()
+    if not url:
+        return "⚠️ Please enter a URL."
+
+    # model expects a list of texts
+    proba = model.predict_proba([url])[0][1]  # probability of class 1 (phishing)
+    pred = 1 if proba >= threshold else 0
+
+    if pred == 1:
+        return f"🚨 Phishing Site Detected! (phish_prob={proba:.2f})"
+    else:
+        return f"✅ Likely Safe URL (phish_prob={proba:.2f})"
+
