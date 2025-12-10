@@ -1,0 +1,11 @@
+
+CyberSleuth/
+  ├── app.py                     # Streamlit main app (UI + routing)
+  ├── phishing_module.py         # ML inference logic (loads model + predicts URL)
+  ├── train_phishing_model.py    # Script to train the model from dataset
+  ├── url_feature_extractor.py   # (Optional) Feature extraction utilities
+  ├── phishing_pipeline.pkl      # Trained ML model + TF-IDF pipeline
+  ├── tnc_module.py              # T&C analyzer logic (text summarization & privacy heuristics)
+  ├── requirements.txt           # Dependencies
+  ├── README.md                  # This documentation
+  └── … (other scripts or helpers)
